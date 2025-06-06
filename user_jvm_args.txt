@@ -103,5 +103,5 @@
 # Displays GraalVM configuration information at startup
 -Djdk.graal.ShowConfiguration=info
 
-# Enables tiered compilation for balancing compilation speed and runtime performance (impact on running performance not yet known, could reduce it)
+# Enables tiered compilation for balancing compilation speed and runtime performance (impact on running performance not yet known, could reduce performance after startup)
 -XX:+TieredCompilation
