@@ -1,0 +1,107 @@
+# Xmx and Xms set the maximum and minimum RAM usage, respectively.
+# They can take any number, followed by an M or a G.
+# M means Megabyte, G means Gigabyte.
+# For example, to set the maximum to 3GB: -Xmx3G
+# To set the minimum to 2.5GB: -Xms2500M
+# Usually you want to allocate as much ram as possible (not over half your ram if it's not a dedicated server, and if it is leave 1-2 gigabytes for the system on linux and 3-4 for windows)
+
+# Tells the JVM that it is definitely a server
+-server
+
+# Min (Xms) and max (Xmx) RAM. Reducing the difference between the two can reduce the number of memory allocations and therefore time spent not running the server
+-Xms14G
+-Xmx22G
+
+# G1GC is a specific garbage collection tool
+-XX:+UseG1GC
+
+# Enables parallel reference processing, improving GC performance
+-XX:+ParallelRefProcEnabled
+
+# Targets a maximum pause time for the garbage collector in milliseconds
+-XX:MaxGCPauseMillis=40
+
+# Unlocks experimental JVM options
+-XX:+UnlockExperimentalVMOptions
+
+# Disables explicit garbage collection calls, preventing performance issues from forced GC
+-XX:+DisableExplicitGC
+
+# Pre-touches memory pages to avoid delays due to lazy allocation
+-XX:+AlwaysPreTouch
+
+# Sets the minimum and maximum size percentages for young generation in G1GC
+-XX:G1NewSizePercent=30
+-XX:G1MaxNewSizePercent=40
+
+# Sets the G1GC heap region size to 8MB
+-XX:G1HeapRegionSize=8M
+
+# Reserves a percentage of the heap for handling allocation spikes
+-XX:G1ReservePercent=20
+
+# Defines the percentage of heap space considered waste before triggering a mixed GC
+-XX:G1HeapWastePercent=5
+
+# Specifies the target number of mixed GCs after a marking cycle
+-XX:G1MixedGCCountTarget=4
+
+# Defines the heap occupancy threshold that triggers concurrent GC cycles
+-XX:InitiatingHeapOccupancyPercent=15
+
+# Sets the threshold for marking live objects during a mixed GC
+-XX:G1MixedGCLiveThresholdPercent=90
+
+# Limits the percentage of time spent updating remembered sets during GC
+-XX:G1RSetUpdatingPauseTimePercent=5
+
+# Defines the survivor ratio, influencing the promotion of objects to the old generation
+-XX:SurvivorRatio=32
+
+# Disables shared memory performance monitoring, improving performance in some cases
+-XX:+PerfDisableSharedMem
+
+# Manually sets the number of active processor cores for the JVM
+-XX:ActiveProcessorCount=4
+
+# Enables the use of large memory pages to reduce TLB misses and improve performance
+-XX:+UseLargePages
+
+# Enables string deduplication to reduce memory usage by eliminating duplicate strings
+-XX:+UseStringDeduplication
+
+# Optimizes string concatenation performance
+-XX:+OptimizeStringConcat
+
+# Enables NUMA-aware memory allocation for better performance on multi-socket systems
+-XX:+UseNUMA
+
+# Allows the use of transparent huge pages to improve memory management efficiency
+-XX:+UseTransparentHugePages
+
+# Enables the experimental JVM compiler (JVMCI) for performance tuning
+-XX:+UseJVMCICompiler
+
+# Specifies the epoll-based selector provider for better network I/O performance
+-Djava.nio.channels.spi.SelectorProvider=sun.nio.ch.EPollSelectorProvider
+
+# Sets the default file encoding to UTF-8 globally, which can eliminate some issues
+-Dfile.encoding=UTF-8
+
+# Configures the JVM entropy source to improve startup performance (for linux)
+-Djava.security.egd=file:/dev/./urandom
+
+# Disables message lookups in Log4j2 to mitigate potential vulnerabilities
+-Dlog4j2.formatMsgNoLookups=true
+
+# Disables Netty's memory leak detection for improved performance
+-Dnetty.leakDetection.level=disabled
+
+# Forces Forge to disable stencil buffer usage
+-Dforge.forceNoStencil=true
+
+# Displays GraalVM configuration information at startup
+-Djdk.graal.ShowConfiguration=info
+
+# Enables tiered compilation for balancing compilation speed and runtime performance (impact on running performance not yet known, could reduce it)
+-XX:+TieredCompilation
