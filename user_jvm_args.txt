@@ -10,7 +10,7 @@
 
 # Min (Xms) and max (Xmx) RAM. Reducing the difference between the two can reduce the number of memory allocations and therefore time spent not running the server
 -Xms14G
--Xmx22G
+-Xmx21G
 
 # G1GC is a specific garbage collection tool
 -XX:+UseG1GC
@@ -19,7 +19,7 @@
 -XX:+ParallelRefProcEnabled
 
 # Targets a maximum pause time for the garbage collector in milliseconds
--XX:MaxGCPauseMillis=40
+#-XX:MaxGCPauseMillis=40 (DISABLED to allow a proper collection of all garbage, multithreaded gc provides minimal STW pauses anyway.)
 
 # Unlocks experimental JVM options
 -XX:+UnlockExperimentalVMOptions
@@ -34,8 +34,8 @@
 -XX:G1NewSizePercent=30
 -XX:G1MaxNewSizePercent=40
 
-# Sets the G1GC heap region size to 8MB
--XX:G1HeapRegionSize=8M
+# Sets the G1GC heap region size. Larger is usually better, but 32M is the higher end of reasonable numbers
+-XX:G1HeapRegionSize=32M
 
 # Reserves a percentage of the heap for handling allocation spikes
 -XX:G1ReservePercent=20
@@ -58,6 +58,12 @@
 # Defines the survivor ratio, influencing the promotion of objects to the old generation
 -XX:SurvivorRatio=32
 
+# Sets the number of threads allowed to work in STW (stop the world) GCs
+-XX:ParallelGCThreads=4
+
+# Sets the number of threads allowed to work in non-STW GCs. Reduced by one to exclude the main server thread from running gc
+-XX:ConcGCThreads=3
+
 # Disables shared memory performance monitoring, improving performance in some cases
 -XX:+PerfDisableSharedMem
 
@@ -66,6 +72,9 @@
 
 # Enables the use of large memory pages to reduce TLB misses and improve performance
 -XX:+UseLargePages
+
+# Allows the use of transparent huge pages to improve memory management efficiency
+-XX:+UseTransparentHugePages
 
 # Enables string deduplication to reduce memory usage by eliminating duplicate strings
 -XX:+UseStringDeduplication
@@ -76,8 +85,8 @@
 # Enables NUMA-aware memory allocation for better performance on multi-socket systems
 -XX:+UseNUMA
 
-# Allows the use of transparent huge pages to improve memory management efficiency
--XX:+UseTransparentHugePages
+# Support for more compilers
+-XX:+EnableJVMCI
 
 # Enables the experimental JVM compiler (JVMCI) for performance tuning
 -XX:+UseJVMCICompiler
@@ -104,4 +113,16 @@
 -Djdk.graal.ShowConfiguration=info
 
 # Enables tiered compilation for balancing compilation speed and runtime performance (impact on running performance not yet known, could reduce performance after startup)
--XX:+TieredCompilation
+#-XX:+TieredCompilation (DISABLED, even startup is slower with it enabled)
+
+# Optimizes performance based on profiler
+-XX:+ProfileInterpreter
+
+# Automatically manages heap sizes for the different object generations
+-XX:+UseAdaptiveSizePolicy
+
+# Only the old regions at least 45% full will be considered for garbage collection
+-XX:G1OldCSetRegionThresholdPercent=45
+
+# Sets the max memory size of a different part of the program not managed by xmx
+-XX:MaxMetaspaceSize=6000m
