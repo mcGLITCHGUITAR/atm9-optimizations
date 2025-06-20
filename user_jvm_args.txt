@@ -19,7 +19,7 @@
 -XX:+ParallelRefProcEnabled
 
 # Targets a maximum pause time for the garbage collector in milliseconds
-#-XX:MaxGCPauseMillis=40 (DISABLED to allow a proper collection of all garbage, multithreaded gc provides minimal STW pauses anyway.)
+-XX:MaxGCPauseMillis=40 
 
 # Unlocks experimental JVM options
 -XX:+UnlockExperimentalVMOptions
@@ -112,8 +112,7 @@
 # Displays GraalVM configuration information at startup
 -Djdk.graal.ShowConfiguration=info
 
-# Enables tiered compilation for balancing compilation speed and runtime performance (impact on running performance not yet known, could reduce performance after startup)
-#-XX:+TieredCompilation (DISABLED, even startup is slower with it enabled)
+#Tiered compilation removed; it wasn't useful
 
 # Optimizes performance based on profiler
 -XX:+ProfileInterpreter
@@ -121,8 +120,8 @@
 # Automatically manages heap sizes for the different object generations
 -XX:+UseAdaptiveSizePolicy
 
-# Only the old regions at least 45% full will be considered for garbage collection
--XX:G1OldCSetRegionThresholdPercent=45
+# Only the old regions at least 30% full will be considered for garbage collection
+-XX:G1OldCSetRegionThresholdPercent=30
 
 # Sets the max memory size of a different part of the program not managed by xmx
 -XX:MaxMetaspaceSize=6000m
